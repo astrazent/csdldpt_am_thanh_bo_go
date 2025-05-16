@@ -44,6 +44,7 @@
 - `tim_kiem_am_thanh.py`: Tìm kiếm các đoạn âm thanh tương đồng dựa trên đặc trưng và cụm đã phân tích, trả về kết quả phù hợp nhất.
 - `trich_dac_trung.py`: Trích xuất đặc trưng âm thanh từ dữ liệu đầu vào, ví dụ cao độ, biến thiên tần số, hoặc các đặc trưng khác phục vụ phân tích.
 - `xu_ly_du_lieu_am_thanh.py`: Xử lý và chuẩn hóa dữ liệu âm thanh gốc, bao gồm lọc nhiễu, chuẩn hóa biên độ, chuyển đổi mẫu để chuẩn bị cho trích xuất đặc trưng.
+- `truc_quan_hoa_dac_trung`: Trực quan hoá đặc trưng âm thanh, hiển thị biểu đồ các chỉ số âm thanh theo thời gian.
 - `requirements.txt`: Danh sách các thư viện Python cần thiết cho dự án, ví dụ `numpy`, `scipy`, `librosa`, `scikit-learn`, `pandas`,...
 - `README.md`: Tài liệu hướng dẫn sử dụng dự án, bao gồm cách cài đặt, chạy thử và mô tả các chức năng chính của hệ thống.
 
