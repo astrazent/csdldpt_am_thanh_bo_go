@@ -1,0 +1,7 @@
+jsonpickle
+scikit-learn
+pandas
+pydub
+numpy
+mysql-connector-python
+librosa
