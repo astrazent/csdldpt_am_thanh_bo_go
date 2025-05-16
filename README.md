@@ -60,8 +60,9 @@ pip install -r requirements.txt
 
 ### 4.2 Chuẩn bị dữ liệu
 
-- Đặt các file âm thanh định dạng `.wav` vào thư mục `du_lieu/` để làm dữ liệu huấn luyện.
-- Các file dùng để kiểm thử nên được đặt vào thư mục `du_lieu_test/`.
+- Đặt các file âm thanh định dạng `.wav` vào thư mục `du_lieu/` (tự tạo) để làm dữ liệu huấn luyện.
+- Các file dùng để kiểm thử nên được đặt vào thư mục `du_lieu_test/` (tự tạo).
+- Tạo thêm thư mục `sieu_du_lieu/` (tự tạo) để lưu các metadata
 
 ---
 
