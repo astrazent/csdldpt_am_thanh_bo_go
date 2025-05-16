@@ -108,7 +108,7 @@ python truc_quan_hoa_dac_trung.py
 
 ---
 
-> Nhóm rất mong nhận được sự góp ý từ cô để hoàn thiện sản phẩm tốt hơn.  
+> Nhóm rất mong nhận được sự góp ý từ thầy để hoàn thiện sản phẩm tốt hơn.  
 > **Chân thành cảm ơn thầy đã theo dõi và đánh giá dự án của nhóm!**
 
 **Ngày hoàn thành: [19/05/2025]**
