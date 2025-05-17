@@ -6,9 +6,16 @@ from pydub import AudioSegment
     Trích rút đặc trưng từ tệp âm thanh
 '''
 def trich_rut_dac_trung(duong_dan_tap_tin):
-    am_thanh = doc_tap_tin_am_thanh(duong_dan_tap_tin)
-    cac_khung = chia_khung_am_thanh(am_thanh)
+    am_thanh, toc_do_lay_mau = doc_tap_tin_am_thanh(duong_dan_tap_tin)
+    thong_tin_khung = chia_khung_am_thanh(am_thanh, toc_do_lay_mau)
+    for item in thong_tin_khung:
+        khung = item["khung"]      
+        bat_dau = item["bat_dau"]  
+        ket_thuc = item["ket_thuc"] 
+    cac_khung = [item["khung"] for item in chia_khung_am_thanh(am_thanh, toc_do_lay_mau)] 
     dac_trung = []
+    ds_bat_dau = []
+    ds_ket_thuc = []
     for khung in cac_khung:
         # loại bỏ các frame bị câm
         if(kiem_tra_khong_im_lang(khung)):
@@ -19,23 +26,36 @@ def trich_rut_dac_trung(duong_dan_tap_tin):
             bien_thien_cd = bien_thien_cao_do(khung)
             toc_do_quet_0 = toc_do_qua_diem_0(khung)
             dac_trung.append([nang_luong_tb, toc_do_quet_0, tan_so_tb, bien_thien_ts, cao_do_tb, bien_thien_cd])
-    return dac_trung
+            ds_bat_dau.append(bat_dau)
+            ds_ket_thuc.append(ket_thuc)
+    return {
+        "dac_trung": dac_trung,
+        "bat_dau": ds_bat_dau,
+        "ket_thuc": ds_ket_thuc
+    }
 
 '''
-    Chia âm thanh thành các khung 0.5s, dịch chuyển 0.25s mỗi lần
+    Chia âm thanh thành các khung có thời gian lấy từ file, gối đầu nhau mỗi lần
 '''
-def chia_khung_am_thanh(am_thanh):
+def chia_khung_am_thanh(am_thanh, toc_do_lay_mau):
     with open("sieu_du_lieu/do_dai_khung.json", "r", encoding="utf-8") as f:
         du_lieu = json.load(f)
-    do_dai_khung = int(du_lieu["do_dai_khung"]) # chiều dài mỗi khung (số mẫu)
-    buoc_nhay = do_dai_khung // 2  # bước nhảy = nửa chiều dài khung để gối đầu
+    do_dai_khung = int(du_lieu["do_dai_khung"])
+    buoc_nhay = do_dai_khung // 2
 
-    khung_am_thanh = []
-    for i in range(0, len(am_thanh) - (do_dai_khung) + 1, buoc_nhay):
+    ds_khung = []
+
+    for i in range(0, len(am_thanh) - do_dai_khung + 1, buoc_nhay):
         khung = am_thanh[i:i + do_dai_khung]
-        khung_am_thanh.append(khung)
+        bat_dau = (i / toc_do_lay_mau) * 1000     
+        ket_thuc = ((i + do_dai_khung) / toc_do_lay_mau) * 1000 
+        ds_khung.append({
+            "khung": khung,
+            "bat_dau": bat_dau,
+            "ket_thuc": ket_thuc # (ms)
+        })
 
-    return khung_am_thanh
+    return ds_khung
 
 '''
     Đọc tệp âm thanh bằng thư viện AudioSegment
@@ -43,7 +63,8 @@ def chia_khung_am_thanh(am_thanh):
 def doc_tap_tin_am_thanh(ten_tap_tin):
     am_thanh = AudioSegment.from_file(ten_tap_tin)
     am_thanh = am_thanh.set_channels(1)  # Chuyển thành mono
-    return am_thanh
+    toc_do_lay_mau = am_thanh.frame_rate    # Lấy sample rate
+    return am_thanh, toc_do_lay_mau
 
 '''
     Tính năng lượng trung bình (RMS energy)

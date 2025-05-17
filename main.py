@@ -33,7 +33,7 @@ with open(duong_dan_dac_trung_am_thanh, 'r') as file:
 cac_cum = json.loads(noi_dung_json)
 
 # Trích rút đặc trưng từ file âm thanh cần so sánh và chuẩn hoá 
-dac_trung = cn.chuan_hoa_phan_phoi_chuan_mot_file(trich_rut_dac_trung(duong_dan_test), duong_dan_chuan_hoa)
+dac_trung = cn.chuan_hoa_phan_phoi_chuan_mot_file(trich_rut_dac_trung(duong_dan_test)["dac_trung"], duong_dan_chuan_hoa)
 
 # Tìm top 3 âm thanh giống nhất
 top_3 = tinh_toan_do_tuong_dong(cac_cum, dac_trung, 3)

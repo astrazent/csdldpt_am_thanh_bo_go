@@ -111,7 +111,7 @@ def chuan_hoa_dac_trung_du_lieu(duong_dan_thu_muc):
     # Bước 1: Trích xuất đặc trưng từ các tệp
     for ten_tap_tin in os.listdir(duong_dan_thu_muc):
         duong_dan_tap_tin = os.path.join(duong_dan_thu_muc, ten_tap_tin)
-        cac_dac_trung = trich_rut_dac_trung(duong_dan_tap_tin)
+        cac_dac_trung = trich_rut_dac_trung(duong_dan_tap_tin)["dac_trung"]
 
         for dac_trung_don in cac_dac_trung:
             du_lieu_tho.append((duong_dan_tap_tin, dac_trung_don))

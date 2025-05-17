@@ -1,6 +1,6 @@
 import os
 import numpy as np
-import kmeans_va_config_db as db
+import kmeans as db
 from cum_va_dac_trung import DacTrung
 
 # Đường dẫn đến thư mục chứa các tệp dữ liệu cần trích đặc trưng

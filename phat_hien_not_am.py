@@ -8,9 +8,9 @@ def phat_hien_not_am_thanh(duong_dan_file):
     # ===== BƯỚC 1: ĐỌC FILE ÂM THANH =====
     tan_so_mau, tin_hieu = wavfile.read(duong_dan_file)
 
-    # Nếu là âm thanh stereo -> lấy 1 kênh
+    # Nếu là âm thanh stereo -> trung bình hoá 2 kênh
     if tin_hieu.ndim > 1:
-        tin_hieu = tin_hieu[:, 0]
+        tin_hieu = tin_hieu.mean(axis=1)
 
     # Chuẩn hóa tín hiệu về [-1, 1]
     tin_hieu = tin_hieu.astype(np.float32)
