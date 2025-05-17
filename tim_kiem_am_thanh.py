@@ -1,9 +1,6 @@
 import os
 import math
 import pandas as pd
-import jsonpickle as json
-from collections import Counter
-from cum_va_dac_trung import Cum
 
 def tinh_khoang_cach_euclidean(dac_trung1, dac_trung2):
     """

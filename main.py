@@ -1,6 +1,6 @@
-import os
 import chuc_nang as cn
 import jsonpickle as json
+from luu_tru_dac_trung import them_dac_trung_vao_db
 from trich_dac_trung import trich_rut_dac_trung
 from phan_cum_dac_trung import phan_cum_dac_trung
 from tim_kiem_am_thanh import tinh_toan_do_tuong_dong
@@ -18,8 +18,10 @@ duong_dan_test = "du_lieu_test/hit_C4_20.wav"
 # Tính thời lượng cho mỗi khung
 tinh_thoi_luong_khung(duong_dan_thu_muc)      # chiều dài mỗi khung (số mẫu)
 
-# Nếu tệp không có dữ liệu hoặc không tồn tại, thực hiện phân cụm đặc trưng
+# Nếu tệp không có dữ liệu hoặc không tồn tại, thực hiện phân cụm đặc trưng và lưu các đặc trưng vào DB
 if(cn.kiem_tra_tap_tin_rong(duong_dan_dac_trung_am_thanh) or cn.kiem_tra_tap_tin_rong(duong_dan_chuan_hoa)):
+    # lưu đặc trưng vào DB
+    them_dac_trung_vao_db()
     # chuẩn hoá toàn bộ dữ liệu
     ds_dac_trung_chuan_hoa = cn.chuan_hoa_dac_trung_du_lieu(duong_dan_thu_muc)
     # phân cụm các đặc trưng
@@ -40,8 +42,3 @@ top_3 = tinh_toan_do_tuong_dong(cac_cum, dac_trung, 3)
 
 # In kết quả
 print(f"Top 3 âm thanh giống nhất với {duong_dan_test}:", top_3)
-
-
-
-
-

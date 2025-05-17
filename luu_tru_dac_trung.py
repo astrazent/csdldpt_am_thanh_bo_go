@@ -26,21 +26,21 @@ def thong_tin_dac_trung():
         duong_dan = os.path.join(thu_muc_du_lieu, ten_file)
         ket_qua = trich_rut_dac_trung(duong_dan)
 
-        dac_trung_cua_file = ket_qua["dac_trung"]
+        ds_dac_trung = ket_qua["dac_trung"]
         ds_bat_dau = ket_qua["bat_dau"]
         ds_ket_thuc = ket_qua["ket_thuc"]
 
-        for i in range(len(dac_trung_cua_file)):
-            dac_trung = dac_trung_cua_file[i]
-            bat_dau = ds_bat_dau[i]
-            ket_thuc = ds_ket_thuc[i]
+        for i in range(len(ds_dac_trung)):
+            dac_trung = [float(x) for x in ds_dac_trung[i]]  # Ép về float từ np.float64
+            bat_dau = int(ds_bat_dau[i])
+            ket_thuc = int(ds_ket_thuc[i])
 
             ds_vector_dac_trung.append(dac_trung)
             ds_dac_trung_dict.append({
                 "ten_file": ten_file,
-                "dac_trung": dac_trung,
                 "bat_dau": bat_dau,
-                "ket_thuc": ket_thuc
+                "ket_thuc": ket_thuc,
+                "dac_trung": dac_trung
             })
     return ds_dac_trung_dict
 
@@ -52,15 +52,23 @@ def luu_dac_trung_vao_json(ds_dict):
     with open("sieu_du_lieu/dac_trung_am_thanh.json", "w") as file:
         file.write(du_lieu_json)
 
-def them_dac_trung_vao_db(ds_dac_trung_dict):
+def them_dac_trung_vao_db():
+    ds_dac_trung_dict = thong_tin_dac_trung()
+
     # thiết lập kết nối tới mySQL
-    ket_noi_csdl = mysql.connector.connect(
-        host="localhost",
-        port="3308",
-        user="root",
-        password="admin",
-        database="dac_trung_bo_go"
-    )
+    try:
+        ket_noi_csdl = mysql.connector.connect(
+            host="localhost",
+            port="3308",
+            user="root",
+            password="admin",
+            database="dac_trung_bo_go"
+        )
+        print("Kết nối CSDL thành công")
+    except Exception as e:
+        print("Không thể kết nối tới MySQL. Chi tiết lỗi:")
+        print(e)
+
     truy_van = ket_noi_csdl.cursor()
     so_dong = 0
 
@@ -76,8 +84,8 @@ def them_dac_trung_vao_db(ds_dac_trung_dict):
             lenh_sql = """
                 INSERT INTO dac_trung_am_thanh (
                     ten_tap_tin,
-                    bat_dau FLOAT,
-                    ket_thuc FLOAT,
+                    bat_dau,
+                    ket_thuc,
                     toc_do_qua_diem_0,
                     nang_luong_trung_binh,
                     tan_so_trung_binh,
@@ -129,10 +137,10 @@ def lay_dac_trung_tu_db(dieu_kien_sql: str, ten_cot: list):
     # Kết nối MySQL
     ket_noi = mysql.connector.connect(
         host="localhost",
-        port=3308,
+        port="3308",
         user="root",
         password="admin",
-        database="nba_search"
+        database="dac_trung_bo_go"
     )
     truy_van = ket_noi.cursor()
 
@@ -153,5 +161,4 @@ def lay_dac_trung_tu_db(dieu_kien_sql: str, ten_cot: list):
 
     return ket_qua
 
-
-them_dac_trung_vao_db(thong_tin_dac_trung())
+# them_dac_trung_vao_db()

@@ -6,17 +6,16 @@ from pydub import AudioSegment
     Trích rút đặc trưng từ tệp âm thanh
 '''
 def trich_rut_dac_trung(duong_dan_tap_tin):
-    am_thanh, toc_do_lay_mau = doc_tap_tin_am_thanh(duong_dan_tap_tin)
-    thong_tin_khung = chia_khung_am_thanh(am_thanh, toc_do_lay_mau)
+    am_thanh, _ = doc_tap_tin_am_thanh(duong_dan_tap_tin)
+    thong_tin_khung = chia_khung_am_thanh(am_thanh)
+    dac_trung = []
+    ds_bat_dau = []
+    ds_ket_thuc = []
     for item in thong_tin_khung:
         khung = item["khung"]      
         bat_dau = item["bat_dau"]  
         ket_thuc = item["ket_thuc"] 
-    cac_khung = [item["khung"] for item in chia_khung_am_thanh(am_thanh, toc_do_lay_mau)] 
-    dac_trung = []
-    ds_bat_dau = []
-    ds_ket_thuc = []
-    for khung in cac_khung:
+
         # loại bỏ các frame bị câm
         if(kiem_tra_khong_im_lang(khung)):
             cao_do_tb = cao_do_trung_binh(khung)
@@ -37,7 +36,7 @@ def trich_rut_dac_trung(duong_dan_tap_tin):
 '''
     Chia âm thanh thành các khung có thời gian lấy từ file, gối đầu nhau mỗi lần
 '''
-def chia_khung_am_thanh(am_thanh, toc_do_lay_mau):
+def chia_khung_am_thanh(am_thanh):
     with open("sieu_du_lieu/do_dai_khung.json", "r", encoding="utf-8") as f:
         du_lieu = json.load(f)
     do_dai_khung = int(du_lieu["do_dai_khung"])
@@ -47,12 +46,12 @@ def chia_khung_am_thanh(am_thanh, toc_do_lay_mau):
 
     for i in range(0, len(am_thanh) - do_dai_khung + 1, buoc_nhay):
         khung = am_thanh[i:i + do_dai_khung]
-        bat_dau = (i / toc_do_lay_mau) * 1000     
-        ket_thuc = ((i + do_dai_khung) / toc_do_lay_mau) * 1000 
+        bat_dau = i
+        ket_thuc = i + do_dai_khung
         ds_khung.append({
             "khung": khung,
             "bat_dau": bat_dau,
-            "ket_thuc": ket_thuc # (ms)
+            "ket_thuc": ket_thuc # (khung)
         })
 
     return ds_khung

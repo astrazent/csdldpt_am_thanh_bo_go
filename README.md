@@ -65,7 +65,31 @@ pip install -r requirements.txt
 
 ---
 
-### 4.3 Chạy chương trình chính
+### 4.3 Tạo Container MySQL bằng Docker (tuỳ chọn)
+#### Bước 1: Tải docker tại trang chủ (nếu chưa có)
+Link trang chủ: `https://www.docker.com/`
+
+#### Bước 2: Tạo docker container mySQL (nếu chưa có)
+Mở thư mục `bo_go_mysql` bằng CMD, sau đó chạy lệnh (nhớ mở docker trước khi chạy):
+
+```bash
+docker-compose up -d
+```
+
+#### Bước 3: Kết nối tới mySQL
+Nhập thông tin server mySQL vừa tạo và kết nối:
+
+```bash
+password: admin
+database: dac_trung_bo_go
+port: 3308
+```
+
+### Buớc 4: Thêm CSDL
+Chạy file script `csdl.sql` để thêm CSDL cho server
+
+
+### 4.4 Chạy chương trình chính
 
 nhập thông tin đường dẫn vào các biến `duong_dan_thu_muc` `duong_dan_dac_trung_am_thanh` `duong_dan_chuan_hoa` `duong_dan_test` trong file `main.py`để thực hiện các bước sau:
 
@@ -79,7 +103,7 @@ nhập thông tin đường dẫn vào các biến `duong_dan_thu_muc` `duong_da
 python main.py
 ```
 
-### 4.4 Trực quan hoá đặc trưng 
+### 4.5 Trực quan hoá đặc trưng 
 
 Chạy file `truc_quan_hoa_dac_trung.py` để trích xuất và hiển thị trực quan các đặc trưng âm thanh từ file `.wav`.
 
