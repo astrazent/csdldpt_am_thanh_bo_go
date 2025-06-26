@@ -1,7 +1,6 @@
 import os
 import mysql.connector
 import jsonpickle as json
-import kmeans as db
 from trich_dac_trung import trich_rut_dac_trung
 
 # Thư mục chứa các file âm thanh
@@ -64,7 +63,6 @@ def them_dac_trung_vao_db():
             password="admin",
             database="dac_trung_bo_go"
         )
-        print("Kết nối CSDL thành công")
     except Exception as e:
         print("Không thể kết nối tới MySQL. Chi tiết lỗi:")
         print(e)
@@ -133,16 +131,19 @@ def lay_dac_trung_tu_db(dieu_kien_sql: str, ten_cot: list):
     - dieu_kien_sql: chuỗi điều kiện SQL (VD: "ten_tap_tin = 'test.wav' AND tan_so_trung_binh > 100")
     - ten_cot: danh sách tên các cột cần lấy (VD: ["tan_so_trung_binh", "nang_luong_trung_binh"])
     """
-
-    # Kết nối MySQL
-    ket_noi = mysql.connector.connect(
-        host="localhost",
-        port="3308",
-        user="root",
-        password="admin",
-        database="dac_trung_bo_go"
-    )
-    truy_van = ket_noi.cursor()
+    # thiết lập kết nối tới mySQL
+    try:
+        ket_noi_csdl = mysql.connector.connect(
+            host="localhost",
+            port="3308",
+            user="root",
+            password="admin",
+            database="dac_trung_bo_go"
+        )
+    except Exception as e:
+        print("Không thể kết nối tới MySQL. Chi tiết lỗi:")
+        print(e)
+    truy_van = ket_noi_csdl.cursor()
 
     # Câu lệnh SELECT
     cot_chon = ", ".join(ten_cot)
@@ -157,8 +158,34 @@ def lay_dac_trung_tu_db(dieu_kien_sql: str, ten_cot: list):
 
     # Đóng kết nối
     truy_van.close()
-    ket_noi.close()
+    ket_noi_csdl.close()
 
     return ket_qua
 
-# them_dac_trung_vao_db()
+def xoa_du_lieu_db():
+    # thiết lập kết nối tới mySQL
+    try:
+        ket_noi_csdl = mysql.connector.connect(
+            host="localhost",
+            port="3308",
+            user="root",
+            password="admin",
+            database="dac_trung_bo_go"
+        )
+    except Exception as e:
+        print("Không thể kết nối tới MySQL. Chi tiết lỗi:")
+        print(e)
+
+    truy_van = ket_noi_csdl.cursor()
+    
+    lenh_sql = f"DELETE FROM dac_trung_am_thanh"
+
+    # Thực thi truy vấn
+    truy_van.execute(lenh_sql)
+    ket_qua = truy_van.fetchall()
+
+    # Đóng kết nối
+    truy_van.close()
+    ket_noi_csdl.close()
+
+    return ket_qua

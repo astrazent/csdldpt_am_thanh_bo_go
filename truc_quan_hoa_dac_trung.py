@@ -84,40 +84,36 @@ def trich_dac_trung(file_am_thanh, thoi_luong_khung=0.5, buoc_nhay=0.25):
         'thoi_gian_khung': np.arange(len(cac_khung)) * buoc_nhay
     }
 
-def ve_bieu_do(dac_trung, ten_file):
-    t = dac_trung['thoi_gian_khung']
-    plt.figure(figsize=(14, 10))
+def ve_bieu_do_nhieu(danh_sach_dac_trung, danh_sach_ten_file):
+    so_bieu_do = len(danh_sach_dac_trung)
+    plt.figure(figsize=(14, 4 * so_bieu_do))
 
-    plt.subplot(4,1,1)
-    plt.plot(t, dac_trung['toc_do_quet_0'], label='Tốc độ qua điểm 0')
-    plt.legend()
-    plt.ylabel('ZCR')
+    for i, (dac_trung, ten_file) in enumerate(zip(danh_sach_dac_trung, danh_sach_ten_file), 1):
+        t = dac_trung['thoi_gian_khung']
 
-    plt.subplot(4,1,2)
-    plt.plot(t, dac_trung['nang_luong_tb'], label='Năng lượng TB', color='orange')
-    plt.legend()
-    plt.ylabel('Năng lượng')
+        plt.subplot(so_bieu_do, 1, i)
+        plt.plot(t, dac_trung['toc_do_quet_0'], label='ZCR', linestyle='dotted')
+        plt.plot(t, dac_trung['nang_luong_tb'], label='Năng lượng TB', alpha=0.6)
+        plt.plot(t, dac_trung['tan_so_tb'], label='Tần số TB', color='green')
+        plt.plot(t, dac_trung['cao_do_tb'], label='Cao độ TB', color='red', linestyle='--')
+        plt.legend()
+        plt.title(
+            f'{ten_file} | Biến thiên TS: {dac_trung["bien_thien_ts"]:.2f}, CD: {dac_trung["bien_thien_cd"]:.2f}'
+        )
+        plt.ylabel('Giá trị đặc trưng')
+        if i == so_bieu_do:
+            plt.xlabel('Thời gian (s)')
 
-    plt.subplot(4,1,3)
-    plt.plot(t, dac_trung['tan_so_tb'], label='Tần số TB', color='green')
-    plt.legend()
-    plt.ylabel('Tần số (Hz)')
-
-    plt.subplot(4,1,4)
-    plt.plot(t, dac_trung['cao_do_tb'], label='Cao độ TB', color='red')
-    plt.legend()
-    plt.ylabel('Cao độ (Hz)')
-    plt.xlabel('Thời gian (s)')
-
-    plt.suptitle(
-        f'Biểu đồ đặc trưng âm thanh theo thời gian\nTệp: {ten_file}\n'
-        f'Biến thiên tần số: {dac_trung["bien_thien_ts"]:.2f}, Biến thiên cao độ: {dac_trung["bien_thien_cd"]:.2f}'
-    )
-    plt.tight_layout(rect=[0, 0, 1, 0.95])
+    plt.tight_layout()
     plt.show()
 
-# Ví dụ chạy với 1 file âm thanh
-# tep_am_thanh = 'du_lieu_test/hit_C4_20.wav'  # Thay bằng file test
-tep_am_thanh = 'du_lieu/hit_C4_5.wav'  # Thay bằng file similar
-dac_trung = trich_dac_trung(tep_am_thanh)
-ve_bieu_do(dac_trung, tep_am_thanh)
+# ---- Chạy chương trình với 4 file âm thanh ----
+
+tep_am_thanh1 = 'du_lieu_test/hit_C4_20.wav'
+tep_am_thanh2 = 'du_lieu/hit_C4_11.wav'
+tep_am_thanh3 = 'du_lieu/hit_C4_12.wav'
+tep_am_thanh4 = 'du_lieu/snare_9.wav'
+
+tep_ams = [tep_am_thanh1, tep_am_thanh2, tep_am_thanh3, tep_am_thanh4]
+ds_dac_trung = [trich_dac_trung(t) for t in tep_ams]
+ve_bieu_do_nhieu(ds_dac_trung, tep_ams)

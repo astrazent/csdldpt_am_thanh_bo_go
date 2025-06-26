@@ -5,7 +5,7 @@ from cum_va_dac_trung import DacTrung
 
 # Đường dẫn đến thư mục chứa các tệp dữ liệu cần trích đặc trưng
 
-def phan_cum_dac_trung(du_lieu_tho, ds_dac_trung_chuan_hoa, so_cum=11):
+def phan_cum_dac_trung(ds_dac_trung_chuan_hoa, so_cum=11):
     """
     Hàm thực hiện phân cụm đặc trưng đã chuẩn hóa và trả về danh sách các cụm.
     """

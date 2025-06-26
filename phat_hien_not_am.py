@@ -10,8 +10,7 @@ def phat_hien_not_am_thanh(duong_dan_file):
 
     # Nếu là âm thanh stereo -> trung bình hoá 2 kênh
     if tin_hieu.ndim > 1:
-        tin_hieu = tin_hieu.mean(axis=1)
-
+        tin_hieu = tin_hieu.mean(axis=1) # giữ nguyên chiều dọc (số hàng), tính TB theo chiều ngang (số cột)
     # Chuẩn hóa tín hiệu về [-1, 1]
     tin_hieu = tin_hieu.astype(np.float32)
     tin_hieu = tin_hieu / np.max(np.abs(tin_hieu))
@@ -34,7 +33,7 @@ def phat_hien_not_am_thanh(duong_dan_file):
 
     # ===== BƯỚC 3: PHÁT HIỆN ONSET =====
     sai_khac = np.diff(danh_sach_rms)
-    chi_so_onset = np.where(sai_khac > 0.02)[0]
+    chi_so_onset = np.where(sai_khac > 0.02)[0] # đơn vị: bước nhảy
 
     # Loại bỏ điểm trùng lặp trong khoảng < 100ms
     khoang_cach_toi_thieu = int(0.1 * tan_so_mau / buoc_nhay)
@@ -57,17 +56,17 @@ def phat_hien_not_am_thanh(duong_dan_file):
                 ket_thuc = vi_tri_khung[i] / tan_so_mau
                 danh_sach_thoi_gian.append((bat_dau, ket_thuc))
                 break
-        else:
+        else: # nếu vòng for không được break thì sẽ vào nhánh này
             bat_dau = vi_tri_khung[onset] / tan_so_mau
             ket_thuc = len(tin_hieu) / tan_so_mau
             danh_sach_thoi_gian.append((bat_dau, ket_thuc))
 
-    # ===== BƯỚC 5: IN KẾT QUẢ =====
+    # # ===== BƯỚC 5: IN KẾT QUẢ =====
     # print("Thời gian các nốt được phát hiện:")
     # for i, (bat_dau, ket_thuc) in enumerate(danh_sach_thoi_gian):
     #     print(f"Nốt {i+1}: {bat_dau:.2f}s → {ket_thuc:.2f}s (thời lượng: {ket_thuc - bat_dau:.2f}s)")
 
-    # ===== BƯỚC 6: VẼ ĐỒ THỊ (TÙY CHỌN) =====
+    # # ===== BƯỚC 6: VẼ ĐỒ THỊ (TÙY CHỌN) =====
     # plt.figure(figsize=(12, 4))
     # plt.plot(thoi_gian_khung, danh_sach_rms, label='Năng lượng RMS')
     # for bat_dau, ket_thuc in danh_sach_thoi_gian:
@@ -83,9 +82,20 @@ def phat_hien_not_am_thanh(duong_dan_file):
     thoi_luong_cac_not = [ket_thuc - bat_dau for bat_dau, ket_thuc in danh_sach_thoi_gian]
     thoi_luong_cac_not = np.array(thoi_luong_cac_not)
 
-    trung_vi = np.median(thoi_luong_cac_not)
+    # Tính trung bình và độ lệch chuẩn
+    mean = np.mean(thoi_luong_cac_not)
+    std = np.std(thoi_luong_cac_not)
 
-    return trung_vi
+    # Tính z-score (chuẩn hóa)
+    z_scores = (thoi_luong_cac_not - mean) / std
+
+    # Lọc ra các giá trị có z-score nằm trong khoảng [-1, 1]
+    gia_tri_hop_le = thoi_luong_cac_not[np.abs(z_scores) <= 1]
+
+    # Tính trung bình mới sau khi loại bỏ ngoại lai
+    trung_binh_loc_ngoai_lai = np.mean(gia_tri_hop_le)
+
+    return trung_binh_loc_ngoai_lai
 
 def tinh_thoi_luong_khung(duong_dan_thu_muc):
     danh_sach_trung_vi = []
@@ -110,3 +120,5 @@ def tinh_thoi_luong_khung(duong_dan_thu_muc):
         json.dump({"do_dai_khung": trung_vi_thu_muc}, f, ensure_ascii=False, indent=4)
     
     return trung_vi_thu_muc
+
+# phat_hien_not_am_thanh('du_lieu/triagle_13.wav')

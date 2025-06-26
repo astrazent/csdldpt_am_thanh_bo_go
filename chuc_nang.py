@@ -29,7 +29,7 @@ def chuan_hoa_phan_phoi_chuan(danh_sach_dac_trung, duong_dan_metadata='sieu_du_l
     # Lưu metadata
     metadata = {
         "mean": gtri_tb.tolist(),
-        "std": do_lech_chuan.tolist()
+        "std": do_lech_chuan.tolist(),
     }
     with open(duong_dan_metadata, 'w') as file:
         json.dump(metadata, file, indent=4)
@@ -127,4 +127,3 @@ def chuan_hoa_dac_trung_du_lieu(duong_dan_thu_muc):
     ]
 
     return ds_dac_trung_chuan_hoa
-
